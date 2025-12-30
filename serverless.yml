@@ -1,27 +1,40 @@
 service: currency-service
 
+frameworkVersion: "3"
+
 provider:
   name: aws
   runtime: python3.9
   region: us-east-1
   stage: prod
+  timeout: 15
+  memorySize: 256
+
   environment:
     EXCHANGE_API_KEY: ${env:EXCHANGE_API_KEY}
     CACHE_TTL: ${env:CACHE_TTL}
 
 functions:
-  app:
+  api:
     handler: app.main.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: currency-converter
+          path: currency-converter/{proxy+}
           method: ANY
 
 plugins:
-  - serverless-domain-manager
   - serverless-python-requirements
+  - serverless-domain-manager
 
 custom:
+  pythonRequirements:
+    dockerizePip: true
+    dockerImage: public.ecr.aws/sam/build-python3.9
+    layer: true
+    slim: true
+
   customDomain:
     domainName: api.francklab.fyi
     basePath: ''
@@ -29,8 +42,3 @@ custom:
     createRoute53Record: true
     endpointType: regional
     certificateName: api.francklab.fyi
-
-  pythonRequirements:
-    dockerizePip: true        # ensures Lambda-compatible packages
-    layer: false               # optional: use Lambda layer for dependencies
-    zip: true

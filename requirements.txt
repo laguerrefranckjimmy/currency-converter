@@ -1,8 +1,8 @@
-fastapi
-mangum
+fastapi==0.110.0
+mangum==0.17.0
+pydantic==2.6.4
 requests
 python-dotenv
-pydantic
 requests
 uvicorn
 python-multipart
