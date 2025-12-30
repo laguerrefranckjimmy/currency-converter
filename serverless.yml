@@ -1,0 +1,30 @@
+service: currency-service
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  stage: prod
+  environment:
+    EXCHANGE_API_KEY: ${env:EXCHANGE_API_KEY}
+    CACHE_TTL: ${env:CACHE_TTL}
+
+functions:
+  app:
+    handler: app.main.handler
+    events:
+      - http:
+          path: currency-converter
+          method: ANY
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: api.francklab.fyi
+    basePath: ''
+    stage: prod
+    createRoute53Record: true
+    endpointType: regional
+    certificateName: api.francklab.fyi
