@@ -19,6 +19,7 @@ functions:
 
 plugins:
   - serverless-domain-manager
+  - serverless-python-requirements
 
 custom:
   customDomain:
@@ -28,3 +29,8 @@ custom:
     createRoute53Record: true
     endpointType: regional
     certificateName: api.francklab.fyi
+
+  pythonRequirements:
+    dockerizePip: true        # ensures Lambda-compatible packages
+    layer: false               # optional: use Lambda layer for dependencies
+    zip: true

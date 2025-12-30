@@ -2,3 +2,7 @@ fastapi
 mangum
 requests
 python-dotenv
+pydantic
+requests
+uvicorn
+python-multipart
